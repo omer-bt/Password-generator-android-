@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,22 +64,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public String generator(){
-        String generatorString = "";
+        StringBuilder generatorString = new StringBuilder();
         CheckBox lowerCheck = findViewById(R.id.lowerCaseCheck);
         if(lowerCheck.isChecked()){
-            generatorString = lowerCase();
+            generatorString.append(lowerCase());
         }
         CheckBox upperCheck = findViewById(R.id.upperCaseCheck);
         if(upperCheck.isChecked()){
-            generatorString += upperCase();
+            generatorString.append(upperCase());
         }
         CheckBox numberCheck = findViewById(R.id.numbersCheck);
         if(numberCheck.isChecked()){
-            generatorString += numbers();
+            generatorString.append(numbers());
+        }
+        CheckBox symbolsCheck = findViewById(R.id.symbolsCheck);
+        EditText SymbolsET = findViewById(R.id.SymbolsET);
+        if(symbolsCheck.isChecked()){
+            generatorString.append(SymbolsET.getText().toString());
         }
 
-        String generatedPass =
-                generatingPass(generatorString);
+
+        String generatedPass = generatingPass(generatorString.toString());
         return generatedPass;
 
 
@@ -97,6 +103,19 @@ public class MainActivity extends AppCompatActivity {
             return "Please pick options";
 
         }
+        CheckBox similarCheck = findViewById(R.id.similarCheck);
+        if(!similarCheck.isChecked()){
+            for(int i = sb.length() - 1; i > 0; i--) {
+                for(int j = i-1; j > 0; j--){
+                    if(sb.charAt(i) == sb.charAt(j)){
+                        sb.deleteCharAt(j);
+                        ;
+                        sb.append(randomCharacter());
+                    }
+                }
+
+            }
+        }
 
         return sb.toString();
     }
@@ -114,6 +133,15 @@ public class MainActivity extends AppCompatActivity {
     public String numbers(){
         String numbers = "1234567890";
         return numbers;
+    }
+
+    public char randomCharacter() {
+        StringBuilder allCharacters = new StringBuilder();
+        String myString = (lowerCase() + upperCase() + numbers());
+        allCharacters.append(myString);
+        char randomizedCharacter = (char) allCharacters.charAt((int) (Math.random() * (myString.length() - 0 + 1)) + 0);
+        System.out.println("\n"+randomizedCharacter+"\n");
+        return randomizedCharacter;
     }
 
 
